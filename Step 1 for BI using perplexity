@@ -1,0 +1,68 @@
+craft a good prompt including examples for every requiement listed below-
+I am uing sql server and i want to create a banbking data set usiung which i will ultimately be creating a power bi report using sql server as data sourv=ce , make sure that the data that you create has around 10K reords and it also has certain data cleaning issues so that i can learn about data cleaning using power query editor, also the data set should be such that i will be able to represent 10 Kpis on a 2 page power bi report(5 kpi each page, suggest those 10 kpis along with chart recommendations and write dax measure which will be required to create the KPIs and represent through visiuals.
+Here’s a comprehensive prompt you can use to generate a synthetic banking dataset in SQL Server, tailored for Power BI dashboarding and data cleaning training. This prompt includes every requirement with example specifications for each, recommendations for KPIs, visuals, and DAX measures.
+Dataset Generation Prompt
+I am building a banking dataset in SQL Server for Power BI reporting and data cleaning practice. Please generate and insert approximately 10,000 records across the following tables and columns:
+Table Structure Example
+•	Accounts: AccountID, CustomerID, AccountType, OpenDate, BranchID, Balance
+•	Transactions: TransactionID, AccountID, TransactionDate, Amount, TransactionType, Description
+•	Customers: CustomerID, Name, Gender, DateOfBirth, Address, City, State, Zip, Email, Phone, Occupation, CreatedDate, Status
+Insert Data Generation Guidelines
+•	Use realistic bank-y data ranges. For transactions, include deposits, withdrawals, charges/fees, and transfers.
+•	Include deliberate data quality issues, e.g.:
+o	Duplicate records in Customers and/or Transactions
+o	Inconsistent formatting for text fields (e.g., emails like "JSmith@Email.com", "jsmith@email.com", phone numbers as "(555)123-4567", "555 123 4567", "5551234567", etc.)
+o	Null or blank values in non-critical columns (e.g., missing emails, addresses)
+o	Random mislabels: e.g., AccountType as 'Current', 'Saving', 'Savings Account', etc., or gender as 'M', 'Male', 'F', 'Female', 'FEMALE'
+o	Out-of-range or negative values in transaction Amount or Account Balance, to teach error discovery
+o	Typos in City or Occupation (e.g., "bankar", "banker", "managar", "manager")
+o	Incorrect dates (future-dated transactions, duplicate TransactionID, mismatched AccountID)
+Example for Data Cleaning Issues
+| CustomerID | Name      | Email             | Gender | Occupation    |
+|------------|-----------|-------------------|--------|--------------|
+| 1001       | Jane Doe  | jane@x.com        | F      | Banker       |
+| 1002       | John Doe  | JDOE@X.COM        | MALE   | Banakr       |
+| 1003       | Jane Doe  | jane@x.com        | Female | Banker       |   <-- duplicate & inconsistent |
+| 1004       |           | n/a               |        | Manager      |   <-- missing values |
+
+KPIs and Power BI Report Requirements
+Your dataset should support at least 10 KPIs, enabling two Power BI report pages (5 KPIs per page). Also, provide recommended visuals and DAX measure examples.
+10 Suggested Banking KPIs
+KPI Name	Brief Description	Visual Recommendation	DAX Measure Example
+1. Total Deposits	Sum of deposit transactions	Card + Trend Line	Total Deposits = CALCULATE(SUM(Transactions[Amount]), Transactions[TransactionType]="Deposit")
+2. Total Withdrawals	Sum of withdrawal transactions	Card + Trend Line	Total Withdrawals = CALCULATE(SUM(Transactions[Amount]), Transactions[TransactionType]="Withdrawal")
+3. Net Interest Earned	Interest income minus expense	Card + Stacked Column	Net Interest = SUM(Transactions[Amount]) - SUM(Transactions[InterestExpense]) (if fields available)
+4. Average Account Balance	Mean of current balances	Gauge / Card	Avg Balance = AVERAGE(Accounts[Balance])
+5. Customer Churn Rate	% customers with closed accounts	Donut/Pie	Churn Rate = DIVIDE(CALCULATE(COUNTROWS(Customers), Customers[Status]="Closed"), COUNTROWS(Customers))
+6. Loan-to-Deposit Ratio	Total loans divided by total deposits	KPI Visual (Indicator)	LDR = DIVIDE(SUM(Accounts[LoanBalance]), [Total Deposits])
+7. Cost-to-Income Ratio	Expenses divided by revenue	Gauge/Stacked Column	CTI = DIVIDE(SUM(Expenses[Amount]), SUM(Income[Amount]))
+8. Return on Equity (ROE)	Profit as % of equity	Card + Clustered Column	ROE = DIVIDE([Net Profit], SUM(Accounts[Equity]))
+9. Active Customers Count	Number of active customer accounts	Card + Bar	Active Customers = CALCULATE(COUNTROWS(Customers), Customers[Status]="Active")
+10. NPA Ratio	Non-performing assets / total assets	Clustered Column/Bar	NPA Ratio = DIVIDE(SUM(Accounts[NPA]), SUM(Accounts[Balance]))
+
+Adjust measures as per final table schema. Add ‘Amount’ fields as relevant.
+Example DAX Syntax for Power BI (with explanations)
+-- Total Deposits
+Total Deposits = 
+CALCULATE(
+    SUM(Transactions[Amount]),
+    Transactions[TransactionType] = "Deposit"
+)
+
+-- Customer Churn Rate
+Churn Rate = 
+DIVIDE(
+    CALCULATE(COUNTROWS(Customers), Customers[Status] = "Closed"),
+    COUNTROWS(Customers)
+)
+
+Adjust to suit your actual column names and logic.
+Power BI Visuals Recommendations
+•	Cards: For headline numbers (e.g., deposits, withdrawals, balances)
+•	KPI Visuals: To show performance vs. targets/trends
+•	Donut/Pie: Customer churn, product adoption
+•	Bar/Column charts: Account types, transactions over time, customer segments
+•	Gauge: Ratios (loan-to-deposit, cost-to-income)
+Example Prompt Ready for Use
+Generate T-SQL insert scripts for a banking dataset with ~10,000 rows spanning Customers, Accounts, Transactions. Include realistic banking fields (see above), and enforce data issues such as duplicates, inconsistent formats, typos, nulls, and outliers (see examples provided). Ensure the dataset is suitable for Power BI KPI dashboarding using SQL Server as source. Also provide a summary table of 10 possible KPIs (with chart/visual and DAX suggestions—see table above) that can be split evenly across two Power BI report pages.
+This prompt and example structure will let you create a feature-rich, purposely “dirty” banking database for Power BI learning, complete with practical KPIs and reporting guidance[1][2][3][4][5][6].
